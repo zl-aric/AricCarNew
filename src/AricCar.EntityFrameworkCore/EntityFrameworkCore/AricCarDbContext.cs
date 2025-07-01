@@ -1,3 +1,4 @@
+using AricCar.Regions;
 using Microsoft.EntityFrameworkCore;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
@@ -9,9 +10,9 @@ using Volo.Abp.EntityFrameworkCore.Modeling;
 using Volo.Abp.FeatureManagement.EntityFrameworkCore;
 using Volo.Abp.Identity;
 using Volo.Abp.Identity.EntityFrameworkCore;
+using Volo.Abp.OpenIddict.EntityFrameworkCore;
 using Volo.Abp.PermissionManagement.EntityFrameworkCore;
 using Volo.Abp.SettingManagement.EntityFrameworkCore;
-using Volo.Abp.OpenIddict.EntityFrameworkCore;
 
 namespace AricCar.EntityFrameworkCore;
 
@@ -23,10 +24,9 @@ public class AricCarDbContext :
 {
     /* Add DbSet properties for your Aggregate Roots / Entities here. */
 
-
     #region Entities from the modules
 
-    /* Notice: We only implemented IIdentityProDbContext 
+    /* Notice: We only implemented IIdentityProDbContext
      * and replaced them for this DbContext. This allows you to perform JOIN
      * queries for the entities of these modules over the repositories easily. You
      * typically don't need that for other modules. But, if you need, you can
@@ -39,6 +39,7 @@ public class AricCarDbContext :
 
     // Identity
     public DbSet<IdentityUser> Users { get; set; }
+
     public DbSet<IdentityRole> Roles { get; set; }
     public DbSet<IdentityClaimType> ClaimTypes { get; set; }
     public DbSet<OrganizationUnit> OrganizationUnits { get; set; }
@@ -47,12 +48,11 @@ public class AricCarDbContext :
     public DbSet<IdentityUserDelegation> UserDelegations { get; set; }
     public DbSet<IdentitySession> Sessions { get; set; }
 
-    #endregion
+    #endregion Entities from the modules
 
     public AricCarDbContext(DbContextOptions<AricCarDbContext> options)
         : base(options)
     {
-
     }
 
     protected override void OnModelCreating(ModelBuilder builder)
@@ -69,7 +69,7 @@ public class AricCarDbContext :
         builder.ConfigureIdentity();
         builder.ConfigureOpenIddict();
         builder.ConfigureBlobStoring();
-        
+
         /* Configure your own tables/entities inside here */
 
         //builder.Entity<YourEntity>(b =>
@@ -78,5 +78,17 @@ public class AricCarDbContext :
         //    b.ConfigureByConvention(); //auto configure for the base class props
         //    //...
         //});
+
+        builder.Entity<Region>(b =>
+        {
+            b.ToTable(AricCarConsts.DbTablePrefix + "Regions", AricCarConsts.DbSchema);
+            b.ConfigureByConvention();
+            b.Property(x => x.ProvincialCode).IsRequired().HasMaxLength(RegionConsts.RegionCodeMaxLength);
+            b.Property(x => x.ProvincialName).IsRequired().HasMaxLength(RegionConsts.RegionNameMaxLength);
+            b.Property(x => x.CityCode).IsRequired(false).HasMaxLength(RegionConsts.RegionCodeMaxLength);
+            b.Property(x => x.CityName).IsRequired(false).HasMaxLength(RegionConsts.RegionNameMaxLength);
+            b.Property(x => x.DistrictCode).IsRequired(false).HasMaxLength(RegionConsts.RegionCodeMaxLength);
+            b.Property(x => x.DistrictName).IsRequired(false).HasMaxLength(RegionConsts.RegionNameMaxLength);
+        });
     }
 }
