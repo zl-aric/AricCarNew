@@ -1,0 +1,80 @@
+{
+  "template": "app",
+  "imports": {
+    "Volo.Abp.LeptonXLiteTheme": {
+      "version": "4.2.1",
+      "isInstalled": true
+    },
+    "Volo.Abp.Account": {
+      "version": "9.2.1",
+      "isInstalled": true
+    },
+    "Volo.Abp.OpenIddict": {
+      "version": "9.2.1",
+      "isInstalled": true
+    },
+    "Volo.Abp.Identity": {
+      "version": "9.2.1",
+      "isInstalled": true
+    },
+    "Volo.Abp.SettingManagement": {
+      "version": "9.2.1",
+      "isInstalled": true
+    },
+    "Volo.Abp.PermissionManagement": {
+      "version": "9.2.1",
+      "isInstalled": true
+    },
+    "Volo.Abp.FeatureManagement": {
+      "version": "9.2.1",
+      "isInstalled": true
+    }
+  },
+  "folders": {
+    "items": {
+      "src": {}
+    }
+  },
+  "packages": {
+    "AricCar.Application": {
+      "path": "src/AricCar.Application/AricCar.Application.abppkg",
+      "folder": "src"
+    },
+    "AricCar.Domain.Shared": {
+      "path": "src/AricCar.Domain.Shared/AricCar.Domain.Shared.abppkg",
+      "folder": "src"
+    },
+    "AricCar.Application.Contracts": {
+      "path": "src/AricCar.Application.Contracts/AricCar.Application.Contracts.abppkg",
+      "folder": "src"
+    },
+    "AricCar.HttpApi": {
+      "path": "src/AricCar.HttpApi/AricCar.HttpApi.abppkg",
+      "folder": "src"
+    },
+    "AricCar.HttpApi.Client": {
+      "path": "src/AricCar.HttpApi.Client/AricCar.HttpApi.Client.abppkg",
+      "folder": "src"
+    },
+    "AricCar.EntityFrameworkCore": {
+      "path": "src/AricCar.EntityFrameworkCore/AricCar.EntityFrameworkCore.abppkg",
+      "folder": "src"
+    },
+    "AricCar.DbMigrator": {
+      "path": "src/AricCar.DbMigrator/AricCar.DbMigrator.abppkg",
+      "folder": "src"
+    },
+    "AricCar.Blazor": {
+      "path": "src/AricCar.Blazor/AricCar.Blazor.abppkg",
+      "folder": "src"
+    },
+    "AricCar.Blazor.Client": {
+      "path": "src/AricCar.Blazor.Client/AricCar.Blazor.Client.abppkg",
+      "folder": "src"
+    },
+    "AricCar.Domain": {
+      "path": "src/AricCar.Domain/AricCar.Domain.abppkg",
+      "folder": "src"
+    }
+  }
+}
