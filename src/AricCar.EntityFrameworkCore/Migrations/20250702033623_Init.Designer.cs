@@ -12,7 +12,7 @@ using Volo.Abp.EntityFrameworkCore;
 namespace AricCar.Migrations
 {
     [DbContext(typeof(AricCarDbContext))]
-    [Migration("20250702022551_Init")]
+    [Migration("20250702033623_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -29,10 +29,12 @@ namespace AricCar.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("CityCode")
+                        .IsRequired()
                         .HasMaxLength(10)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("CityName")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
@@ -60,10 +62,12 @@ namespace AricCar.Migrations
                         .HasColumnName("DeletionTime");
 
                     b.Property<string>("DistrictCode")
+                        .IsRequired()
                         .HasMaxLength(10)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("DistrictName")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 

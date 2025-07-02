@@ -51,13 +51,6 @@ namespace AricCar.Regions
             await _regionRepository.DeleteAsync(id);
         }
 
-        [Authorize(AricCarPermissions.Regions.Edit)]
-        public async Task<RegionDto> UpdateAsync(Guid id, RegionUpdateDto input)
-        {
-            var engineInstance = await _regionManager.UpdateAsync(id, input.ProvincialCode, input.ProvincialName, input.CityCode, input.CityName, input.DistrictCode, input.DistrictName, input.ConcurrencyStamp);
-
-            return ObjectMapper.Map<Region, RegionDto>(engineInstance);
-        }
 
         public async Task<ListResultDto<RegionItem>> GetRegionJsonListAsync()
         {

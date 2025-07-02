@@ -1,8 +1,5 @@
-﻿using JetBrains.Annotations;
-using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Volo.Abp;
-using Volo.Abp.Data;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Domain.Services;
 
@@ -20,20 +17,23 @@ namespace AricCar.Regions
         public virtual async Task<Region> CreateAsync(
             string provincialCode,
             string provincialName,
-            string? cityCode = null,
-            string? cityName = null,
-            string? districtCode = null,
-            string? districtName = null)
+            string cityCode,
+            string cityName,
+            string districtCode,
+            string districtName)
         {
             Check.NotNullOrWhiteSpace(provincialCode, nameof(provincialCode));
             Check.Length(provincialCode, nameof(provincialCode), RegionConsts.RegionCodeMaxLength, RegionConsts.RegionCodeMinLength);
             Check.NotNullOrWhiteSpace(provincialName, nameof(provincialName));
             Check.Length(provincialName, nameof(provincialName), RegionConsts.RegionNameMaxLength, RegionConsts.RegionNameMinLength);
-
-            Check.Length(cityCode, nameof(cityCode), RegionConsts.RegionCodeMaxLength);
-            Check.Length(cityName, nameof(cityName), RegionConsts.RegionNameMaxLength);
-            Check.Length(districtCode, nameof(districtCode), RegionConsts.RegionCodeMaxLength);
-            Check.Length(districtName, nameof(districtName), RegionConsts.RegionNameMaxLength);
+            Check.NotNullOrWhiteSpace(cityCode, nameof(cityCode));
+            Check.Length(cityCode, nameof(cityCode), RegionConsts.RegionCodeMaxLength, RegionConsts.RegionCodeMinLength);
+            Check.NotNullOrWhiteSpace(cityName, nameof(cityName));
+            Check.Length(cityName, nameof(cityName), RegionConsts.RegionNameMaxLength, RegionConsts.RegionNameMinLength);
+            Check.NotNullOrWhiteSpace(districtCode, nameof(districtCode));
+            Check.Length(districtCode, nameof(districtCode), RegionConsts.RegionCodeMaxLength, RegionConsts.RegionCodeMinLength);
+            Check.NotNullOrWhiteSpace(districtName, nameof(districtName));
+            Check.Length(districtName, nameof(districtName), RegionConsts.RegionNameMaxLength, RegionConsts.RegionNameMinLength);
 
             var isExist = await _regionRepository.AnyAsync(x => x.ProvincialCode == provincialCode && x.DistrictCode == districtCode && x.CityCode == cityCode);
             if (isExist)
@@ -52,46 +52,6 @@ namespace AricCar.Regions
             );
 
             return await _regionRepository.InsertAsync(region);
-        }
-
-        public virtual async Task<Region> UpdateAsync(
-            Guid id,
-            string provincialCode,
-            string provincialName,
-            string? cityCode = null,
-            string? cityName = null,
-            string? districtCode = null,
-            string? districtName = null,
-            [CanBeNull] string? concurrencyStamp = null
-      )
-        {
-            Check.NotNullOrWhiteSpace(provincialCode, nameof(provincialCode));
-            Check.Length(provincialCode, nameof(provincialCode), RegionConsts.RegionCodeMaxLength, RegionConsts.RegionCodeMinLength);
-            Check.NotNullOrWhiteSpace(provincialName, nameof(provincialName));
-            Check.Length(provincialName, nameof(provincialName), RegionConsts.RegionNameMaxLength, RegionConsts.RegionNameMinLength);
-
-            Check.Length(cityCode, nameof(cityCode), RegionConsts.RegionCodeMaxLength);
-            Check.Length(cityName, nameof(cityName), RegionConsts.RegionNameMaxLength);
-            Check.Length(districtCode, nameof(districtCode), RegionConsts.RegionCodeMaxLength);
-            Check.Length(districtName, nameof(districtName), RegionConsts.RegionNameMaxLength);
-
-            var isExist = await _regionRepository.AnyAsync(x => x.Id != id && x.ProvincialCode == provincialCode && x.DistrictCode == districtCode && x.CityCode == cityCode);
-            if (isExist)
-            {
-                throw new RegionRepeatException();
-            }
-
-            var item = await _regionRepository.GetAsync(id);
-
-            item.ProvincialCode = provincialCode;
-            item.ProvincialName = provincialName;
-            item.CityCode = cityCode;
-            item.CityName = cityName;
-            item.DistrictCode = districtCode;
-            item.DistrictName = districtName;
-
-            item.SetConcurrencyStampIfNotNull(concurrencyStamp);
-            return await _regionRepository.UpdateAsync(item);
         }
     }
 }

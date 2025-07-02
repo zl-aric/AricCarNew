@@ -87,10 +87,10 @@ public class AricCarDbContext :
             b.ConfigureByConvention();
             b.Property(x => x.ProvincialCode).IsRequired().HasMaxLength(RegionConsts.RegionCodeMaxLength);
             b.Property(x => x.ProvincialName).IsRequired().HasMaxLength(RegionConsts.RegionNameMaxLength);
-            b.Property(x => x.CityCode).IsRequired(false).HasMaxLength(RegionConsts.RegionCodeMaxLength);
-            b.Property(x => x.CityName).IsRequired(false).HasMaxLength(RegionConsts.RegionNameMaxLength);
-            b.Property(x => x.DistrictCode).IsRequired(false).HasMaxLength(RegionConsts.RegionCodeMaxLength);
-            b.Property(x => x.DistrictName).IsRequired(false).HasMaxLength(RegionConsts.RegionNameMaxLength);
+            b.Property(x => x.CityCode).IsRequired().HasMaxLength(RegionConsts.RegionCodeMaxLength);
+            b.Property(x => x.CityName).IsRequired().HasMaxLength(RegionConsts.RegionNameMaxLength);
+            b.Property(x => x.DistrictCode).IsRequired().HasMaxLength(RegionConsts.RegionCodeMaxLength);
+            b.Property(x => x.DistrictName).IsRequired().HasMaxLength(RegionConsts.RegionNameMaxLength);
         });
     }
 }

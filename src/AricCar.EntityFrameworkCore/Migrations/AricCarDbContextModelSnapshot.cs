@@ -26,10 +26,12 @@ namespace AricCar.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("CityCode")
+                        .IsRequired()
                         .HasMaxLength(10)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("CityName")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
@@ -57,10 +59,12 @@ namespace AricCar.Migrations
                         .HasColumnName("DeletionTime");
 
                     b.Property<string>("DistrictCode")
+                        .IsRequired()
                         .HasMaxLength(10)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("DistrictName")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 

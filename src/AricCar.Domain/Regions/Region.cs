@@ -10,7 +10,7 @@ namespace AricCar.Regions
         {
         }
 
-        public Region(Guid id, string provincialCode, string provincialName, string? cityCode = null, string? cityName = null, string? districtCode = null, string? districtName = null)
+        public Region(Guid id, string provincialCode, string provincialName, string cityCode, string cityName, string districtCode, string districtName)
         {
             this.Id = id;
             this.ProvincialCode = provincialCode;
@@ -27,16 +27,16 @@ namespace AricCar.Regions
         [NotNull]
         public virtual string ProvincialName { get; set; }
 
-        [CanBeNull]
-        public virtual string? CityCode { get; set; }
+        [NotNull]
+        public virtual string CityCode { get; set; }
 
-        [CanBeNull]
-        public virtual string? CityName { get; set; }
+        [NotNull]
+        public virtual string CityName { get; set; }
 
-        [CanBeNull]
-        public virtual string? DistrictCode { get; set; }
+        [NotNull]
+        public virtual string DistrictCode { get; set; }
 
-        [CanBeNull]
-        public virtual string? DistrictName { get; set; }
+        [NotNull]
+        public virtual string DistrictName { get; set; }
     }
 }

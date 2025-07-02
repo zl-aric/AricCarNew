@@ -183,40 +183,7 @@ public partial class Regions
         }
     }
 
-    private async Task CloseEditRegionModalAsync()
-    {
-        await EditRegionModal.Hide();
-    }
-
-    private async Task UpdateRegionAsync()
-    {
-        try
-        {
-            if (await EditingRegionValidations.ValidateAll() == false)
-            {
-                return;
-            }
-
-            await RegionsAppService.UpdateAsync(EditingRegionId, EditingRegion);
-            await GetRegionsAsync();
-            await EditRegionModal.Hide();
-        }
-        catch (Exception ex)
-        {
-            await HandleErrorAsync(ex);
-        }
-    }
-
-    private void OnSelectedCreateTabChanged(string name)
-    {
-        SelectedCreateTab = name;
-    }
-
-    private void OnSelectedEditTabChanged(string name)
-    {
-        SelectedEditTab = name;
-    }
-
+  
     private Task OnProvinceChanged(RegionItem value)
     {
         NewRegion.Province = value;

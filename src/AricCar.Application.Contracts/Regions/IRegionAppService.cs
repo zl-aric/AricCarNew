@@ -15,8 +15,6 @@ namespace AricCar.Regions
 
         Task<RegionDto> CreateAsync(RegionCreateDto input);
 
-        Task<RegionDto> UpdateAsync(Guid id, RegionUpdateDto input);
-
         Task<ListResultDto<RegionItem>> GetRegionJsonListAsync();
     }
 }
