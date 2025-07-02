@@ -272,3 +272,4 @@ src/AricCar.Blazor.Server.Tiered/Logs/*
 # IdentityServer temp files
 tempkey.rsa
 tempkey.jwk
+/src/AricCar.Blazor/Logs/logs.txt
