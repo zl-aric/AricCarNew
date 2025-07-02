@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Dtos;
 
@@ -26,8 +27,8 @@ namespace AricCar.Regions
 
         public async Task<PagedResultDto<RegionDto>> GetListAsync(GetRegionsInput input)
         {
-            var totalCount = await _regionRepository.GetCountAsync(input.ProvincialName, input.CityName, input.DistrictName);
-            var items = await _regionRepository.GetListAsync(input.ProvincialName, input.CityName, input.DistrictName, input.Sorting, input.MaxResultCount, input.SkipCount);
+            var totalCount = await _regionRepository.GetCountAsync(input.FilterText, input.ProvinceCode, input.CityCode, input.DistrictCode);
+            var items = await _regionRepository.GetListAsync(input.FilterText, input.ProvinceCode, input.CityCode, input.DistrictCode, input.Sorting, input.MaxResultCount, input.SkipCount);
 
             return new PagedResultDto<RegionDto>
             {
@@ -56,6 +57,13 @@ namespace AricCar.Regions
             var engineInstance = await _regionManager.UpdateAsync(id, input.ProvincialCode, input.ProvincialName, input.CityCode, input.CityName, input.DistrictCode, input.DistrictName, input.ConcurrencyStamp);
 
             return ObjectMapper.Map<Region, RegionDto>(engineInstance);
+        }
+
+        public async Task<ListResultDto<RegionJsonModel>> GetRegionJsonListAsync()
+        {
+            var jsonStr = await File.ReadAllTextAsync("wwwroot/region.json");
+            var regions = System.Text.Json.JsonSerializer.Deserialize<List<RegionJsonModel>>(jsonStr);
+            return new ListResultDto<RegionJsonModel>(regions!);
         }
     }
 }

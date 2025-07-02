@@ -18,39 +18,43 @@ namespace AricCar.Regions
         }
 
         public async Task<long> GetCountAsync(
-            string? provinceName = null, 
-            string? cityName = null, 
-            string? districtName = null, 
+            string? filter = null,
+            string? provinceCode = null,
+            string? cityCode = null,
+            string? districtCode = null,
             CancellationToken cancellationToken = default)
         {
-            var query = ApplyFilter((await GetDbSetAsync()), provinceName, cityName, districtName);
+            var query = ApplyFilter((await GetDbSetAsync()),filter, provinceCode, cityCode, districtCode);
             return await query.LongCountAsync(GetCancellationToken(cancellationToken));
         }
 
         public async Task<List<Region>> GetListAsync(
-            string? provinceName = null, 
-            string? cityName = null, 
-            string? districtName = null, 
+            string? filter = null,
+            string? provinceCode = null,
+            string? cityCode = null,
+            string? districtCode = null,
             string? sorting = null, 
             int maxResultCount = int.MaxValue, 
             int skipCount = 0, 
             CancellationToken cancellationToken = default)
         {
-            var query = ApplyFilter((await GetQueryableAsync()), provinceName, cityName, districtName);
+            var query = ApplyFilter((await GetQueryableAsync()), filter, provinceCode, cityCode, districtCode);
             query = query.OrderBy(string.IsNullOrWhiteSpace(sorting) ? RegionConsts.GetDefaultSorting(false) : sorting);
             return await query.PageBy(skipCount, maxResultCount).ToListAsync(cancellationToken);
         }
 
         protected virtual IQueryable<Region> ApplyFilter(
                 IQueryable<Region> query,
-                string? provinceName = null,
-                string? cityName = null,
-                string? districtName = null)
+                string? filter = null,
+                string? provinceCode = null,
+                string? cityCode = null,
+                string? districtCode = null)
         {
             return query
-                    .WhereIf(!string.IsNullOrWhiteSpace(provinceName), e => e.ProvincialName.Contains(provinceName!))
-                    .WhereIf(!string.IsNullOrWhiteSpace(cityName), e => e.CityName.Contains(cityName!))
-                    .WhereIf(!string.IsNullOrWhiteSpace(districtName), e => e.DistrictName.Contains(districtName!));
+                    .WhereIf(!string.IsNullOrWhiteSpace(filter), e => e.ProvincialName!.Contains(filter!)|| e.CityName!.Contains(filter!)|| e.DistrictName!.Contains(filter!))
+                    .WhereIf(!string.IsNullOrWhiteSpace(provinceCode), e => e.ProvincialCode == provinceCode)
+                    .WhereIf(!string.IsNullOrWhiteSpace(cityCode), e => e.CityCode == cityCode)
+                    .WhereIf(!string.IsNullOrWhiteSpace(districtCode), e => e.DistrictCode == districtCode);
         }
     }
 }

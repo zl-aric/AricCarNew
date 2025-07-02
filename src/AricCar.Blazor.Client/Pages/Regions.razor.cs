@@ -15,7 +15,6 @@ namespace AricCar.Blazor.Client.Pages;
 
 public partial class Regions
 {
-
     protected List<Volo.Abp.BlazoriseUI.BreadcrumbItem> BreadcrumbItems = new List<Volo.Abp.BlazoriseUI.BreadcrumbItem>();
     protected PageToolbar Toolbar { get; } = new PageToolbar();
     protected bool ShowAdvancedFilters { get; set; }
@@ -40,6 +39,10 @@ public partial class Regions
     protected string SelectedEditTab = "Region-edit-tab";
     private RegionDto? SelectedRegion;
 
+    private ListResultDto<RegionJsonModel>? ProvicnesList { get; set; }
+    private RegionJsonModel? selectedProvince;
+    private RegionJsonModel? selectedCity;
+    private RegionJsonModel? selectedDistrict;
 
     public Regions()
     {
@@ -52,22 +55,18 @@ public partial class Regions
             Sorting = CurrentSorting
         };
         RegionList = new List<RegionDto>();
-
-
-
     }
 
     protected override async Task OnInitializedAsync()
     {
         await SetPermissionsAsync();
-
+        ProvicnesList = await RegionsAppService.GetRegionJsonListAsync();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-
             await SetBreadcrumbItemsAsync();
             await SetToolbarItemsAsync();
             await InvokeAsync(StateHasChanged);
@@ -76,15 +75,13 @@ public partial class Regions
 
     protected virtual ValueTask SetBreadcrumbItemsAsync()
     {
-        BreadcrumbItems.Add(new Volo.Abp.BlazoriseUI.BreadcrumbItem(L["Regions"]));
+        BreadcrumbItems.Add(new Volo.Abp.BlazoriseUI.BreadcrumbItem("区域管理"));
         return ValueTask.CompletedTask;
     }
 
     protected virtual ValueTask SetToolbarItemsAsync()
     {
-
-
-        Toolbar.AddButton(L["NewRegion"], async () =>
+        Toolbar.AddButton("新增区域", async () =>
         {
             await OpenCreateRegionModalAsync();
         }, IconName.Add, requiredPolicyName: AricCarPermissions.Regions.Create);
@@ -100,8 +97,6 @@ public partial class Regions
                         .IsGrantedAsync(AricCarPermissions.Regions.Edit);
         CanDeleteRegion = await AuthorizationService
                         .IsGrantedAsync(AricCarPermissions.Regions.Delete);
-
-
     }
 
     private async Task GetRegionsAsync()
@@ -113,8 +108,6 @@ public partial class Regions
         var result = await RegionsAppService.GetListAsync(Filter);
         RegionList = result.Items;
         TotalCount = (int)result.TotalCount;
-
-
     }
 
     protected virtual async Task SearchAsync()
@@ -139,12 +132,9 @@ public partial class Regions
     {
         NewRegion = new RegionCreateDto
         {
-
-
         };
 
         SelectedCreateTab = "Region-create-tab";
-
 
         await NewRegionValidations.ClearAll();
         await CreateRegionModal.Show();
@@ -154,8 +144,6 @@ public partial class Regions
     {
         NewRegion = new RegionCreateDto
         {
-
-
         };
         await CreateRegionModal.Hide();
     }
@@ -163,7 +151,6 @@ public partial class Regions
     private async Task OpenEditRegionModalAsync(RegionDto input)
     {
         SelectedEditTab = "Region-edit-tab";
-
 
         var Region = await RegionsAppService.GetAsync(input.Id);
 
@@ -233,4 +220,28 @@ public partial class Regions
         SelectedEditTab = name;
     }
 
+    private Task OnProvinceChanged(RegionJsonModel value)
+    {
+        selectedProvince = value;
+        NewRegion.ProvincialCode = value.Code;
+        NewRegion.ProvincialName = value.Name;
+
+        return Task.CompletedTask;
+    }
+
+    private Task OnCityChanged(RegionJsonModel? value)
+    {
+        selectedCity = value;
+        NewRegion.CityCode = value?.Code;
+        NewRegion.CityName = value?.Name;
+        return Task.CompletedTask;
+    }
+
+    private Task OnDisChanged(RegionJsonModel? value)
+    {
+        selectedDistrict = value;
+        NewRegion.DistrictCode = value?.Code;
+        NewRegion.DistrictName = value?.Name;
+        return Task.CompletedTask;
+    }
 }

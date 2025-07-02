@@ -11,9 +11,10 @@ namespace AricCar.Regions
     public interface IRegionRepository : IRepository<Region, Guid>
     {
         Task<List<Region>> GetListAsync(
-           string? provinceName = null,
-           string? cityName = null,
-           string? districtName = null,
+            string? filter = null,
+           string? provinceCode = null,
+           string? cityCode = null,
+           string? districtCode = null,
            string? sorting = null,
            int maxResultCount = int.MaxValue,
            int skipCount = 0,
@@ -21,9 +22,10 @@ namespace AricCar.Regions
        );
 
         Task<long> GetCountAsync(
-            string? provinceName = null,
-           string? cityName = null,
-           string? districtName = null,
+            string? filter = null,
+            string? provinceCode = null,
+           string? cityCode = null,
+           string? districtCode = null,
             CancellationToken cancellationToken = default);
     }
 }

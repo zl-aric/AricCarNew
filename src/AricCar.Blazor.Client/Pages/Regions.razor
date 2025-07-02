@@ -1,5 +1,3 @@
-
-
 @page "/regions"
 
 @attribute [Authorize(AricCarPermissions.Regions.Default)]
@@ -26,7 +24,7 @@
 @inject IUiMessageService UiMessageService
 
 
-
+#nullable enable
 
 @* ************************* PAGE HEADER ************************* *@
 <PageHeader Title="@L["Regions"]" BreadcrumbItems="BreadcrumbItems" Toolbar="Toolbar">
@@ -43,9 +41,9 @@
                     <Form id="RegionSearchForm">
                         <Addons>
                             <Addon AddonType="AddonType.Body">
-                                <TextEdit @bind-Text="@Filter.ProvincialName"
-                                        Autofocus="true"
-                                        Placeholder="@L["Search"]">
+                                <TextEdit @bind-Text="@Filter.FilterText"
+                                          Autofocus="true"
+                                          Placeholder="@L["Search"]">
                                 </TextEdit>
                             </Addon>
                             <Addon AddonType="AddonType.End">
@@ -57,54 +55,50 @@
                     </Form>
                 </div>
             </div>
-                
-       <div class="col-md-4 col-lg-2">
-            <div class="mb-3">
-               <Button Color="Color.Primary" Outline Style="width:100%" id="AdvancedFilterSectionToggler"
-                         Clicked="@(() => ShowAdvancedFilters = !ShowAdvancedFilters)">@L["Filters"]
-                         <i aria-hidden="true" class="fa ms-1 @(!ShowAdvancedFilters ? "fa-angle-down" : "fa-angle-up")"></i>
-               </Button>
+
+            <div class="col-md-4 col-lg-2">
+                <div class="mb-3">
+                    <Button Color="Color.Primary" Outline Style="width:100%" id="AdvancedFilterSectionToggler"
+                            Clicked="@(() => ShowAdvancedFilters = !ShowAdvancedFilters)">
+                        更多过滤条件
+                        <i aria-hidden="true" class="fa ms-1 @(!ShowAdvancedFilters ? "fa-angle-down" : "fa-angle-up")"></i>
+                    </Button>
+                </div>
             </div>
-       </div>
-        
-        <div style="display: @(!ShowAdvancedFilters ? "none" : "block")"  class="mt-3">
-            <Row>
-                <Column ColumnSize="ColumnSize.Is3">
-                    <Field>
-                        <FieldLabel>@L["Type"]</FieldLabel>
-                        <Select TValue="EngineTypeEnum?"
-		SelectedValue="@Filter.Type"
-		SelectedValueChanged="@OnTypeChangedAsync">
 
-<SelectItem></SelectItem>
+            <div style="display: @(!ShowAdvancedFilters ? "none" : "block")" class="mt-3">
+                <Row>
 
-@foreach(EngineTypeEnum value in Enum.GetValues(typeof(EngineTypeEnum)))
-{
-	<SelectItem Value="value">
-		@value
-	</SelectItem>
-}
+                    <Column ColumnSize="ColumnSize.Is3">
+                        <Field>
+                            <FieldLabel>省</FieldLabel>
+                            <Select @bind-SelectedValue="@Filter.ProvinceCode">
+                                <SelectItem></SelectItem>
+                            </Select>
+                        </Field>
+                    </Column>
 
-</Select>                       
-                    </Field>
-                </Column>
-                <Column ColumnSize="ColumnSize.Is3">
-                    <Field>
-                        <FieldLabel>@L["Enable"]</FieldLabel>
-                        <Select TValue="bool?"
-		SelectedValue="@Filter.Enable"
-		SelectedValueChanged="@OnEnableChangedAsync">
+                    <Column ColumnSize="ColumnSize.Is3">
+                        <Field>
+                            <FieldLabel>市</FieldLabel>
+                            <Select @bind-SelectedValue="@Filter.CityCode">
+                                <SelectItem></SelectItem>
 
-<SelectItem></SelectItem>
-<SelectItem Value="true">@L["Yes"]</SelectItem>
-<SelectItem Value="false">@L["No"]</SelectItem>
+                            </Select>
+                        </Field>
+                    </Column>
 
-</Select>                       
-                    </Field>
-                </Column>
-            </Row>
+                    <Column ColumnSize="ColumnSize.Is3">
+                        <Field>
+                            <FieldLabel>区/县</FieldLabel>
+                            <Select @bind-SelectedValue="@Filter.DistrictCode">
+                                <SelectItem></SelectItem>
 
-        </div>
+                            </Select>
+                        </Field>
+                    </Column>
+                </Row>
+            </div>
 
         </Row>
 
@@ -117,10 +111,6 @@
     <CardBody>
         <DataGrid TItem="RegionDto"
                   Data="RegionList"
-                  
-                  
-                  
-                  
                   ReadData="OnDataGridReadAsync"
                   TotalItems="TotalCount"
                   ShowPager="true"
@@ -130,7 +120,7 @@
             <LoadingTemplate>
                 <Row Class="w-100 align-items-center" Style="height: 150px;">
                     <Column>
-                       <RadarSpinner />
+                        <RadarSpinner />
                     </Column>
                 </Row>
             </LoadingTemplate>
@@ -140,10 +130,10 @@
                         <Heading Size="HeadingSize.Is4" TextAlignment="TextAlignment.Center">@L["NoDataAvailable"]</Heading>
                     </Column>
                 </Row>
-            </EmptyTemplate>   
+            </EmptyTemplate>
             <DataGridColumns>
-                
-                
+
+
                 <DataGridEntityActionsColumn TItem="RegionDto" @ref="@EntityActionsColumn">
                     <DisplayTemplate>
                         <EntityActions TItem="RegionDto" EntityActionsColumn="@EntityActionsColumn">
@@ -160,45 +150,35 @@
                         </EntityActions>
                     </DisplayTemplate>
                 </DataGridEntityActionsColumn>
-               
-              <DataGridColumn TItem="RegionDto"
-                      Field="Type"
-                      Caption="@L["Type"]">
+
+                <DataGridColumn TItem="RegionDto"
+                                Field="ProvincialName"
+                                Caption="省">
+                </DataGridColumn>
+
+
+                <DataGridColumn TItem="RegionDto"
+                                Field="CityName"
+                                Caption="市">
+                </DataGridColumn>
+
+                <DataGridColumn TItem="RegionDto"
+                                Field="DistrictName"
+                                Caption="区/县">
+                </DataGridColumn>
+
+                <DataGridColumn TItem="RegionDto"
+                                Field="CreationTime"
+                                Caption="创建时间">
                     <DisplayTemplate>
-                        @L[$"Enum:EngineTypeEnum.{(int)context.Type}"]
+                        @context.CreationTime.ToString("yyyy-MM-dd HH:mm:ss")
                     </DisplayTemplate>
-              </DataGridColumn>
-
-
-              <DataGridColumn TItem="RegionDto"
-                      Field="Host"
-                      Caption="@L["Host"]">
-              </DataGridColumn>
-
-              <DataGridColumn TItem="RegionDto"
-                      Field="TimeOut"
-                      Caption="@L["TimeOut"]">
-              </DataGridColumn>
-
-              <DataGridColumn TItem="RegionDto"
-                      Field="Enable"
-                      Caption="@L["Enable"]">
-                    <DisplayTemplate>
-                        @if (context.Enable)
-                        {
-                            <Icon TextColor="TextColor.Success" Name="@IconName.Check" />
-                        }
-                        else
-                        {
-                            <Icon TextColor="TextColor.Danger" Name="@IconName.Times" />
-                        }
-                    </DisplayTemplate>
-              </DataGridColumn>
+                </DataGridColumn>
 
 
             </DataGridColumns>
-            
-            
+
+
         </DataGrid>
     </CardBody>
 </Card>
@@ -214,54 +194,47 @@
             </ModalHeader>
             <ModalBody>
                 <Validations @ref="@NewRegionValidations"
-                            Mode="ValidationMode.Auto"
-                            Model="@NewRegion"
-                            ValidateOnLoad="false">
-                    
-                    
+                             Mode="ValidationMode.Auto"
+                             Model="@NewRegion"
+                             ValidateOnLoad="false">
                     <Field>
-                        <FieldLabel>@L["Type"]</FieldLabel>
-                        <Select TValue="EngineTypeEnum" @bind-SelectedValue="@NewRegion.Type" >
-                            @foreach (var itemValue in Enum.GetValues(typeof(EngineTypeEnum)))
+                        <FieldLabel>省</FieldLabel>
+                        <Select TValue="RegionJsonModel" SelectedValueChanged="OnProvinceChanged">
+                            @foreach (var itemValue in ProvicnesList!.Items)
                             {
-                                <SelectItem TValue="EngineTypeEnum" Value="@((EngineTypeEnum) itemValue)">
-                                    @L[$"Enum:EngineTypeEnum.{((EngineTypeEnum) itemValue).ToString("d")}"]
-                                </SelectItem>
+                                <SelectItem TValue="RegionJsonModel" Value="@itemValue">@itemValue.Name</SelectItem>
                             }
                         </Select>
                     </Field>
 
-
-                    <Validation MessageLocalizer="@LH.Localize">
-                        <Field>
-                            <FieldLabel>@L["Host"] *</FieldLabel>
-                            <TextEdit @bind-Text="@NewRegion.Host" MaxLength="RegionConsts.HostMaxLength" >
-                                <Feedback>
-                                    <ValidationError />
-                                </Feedback>
-                            </TextEdit>
-                        </Field>
-                    </Validation>
-
-
-                    <Validation MessageLocalizer="@LH.Localize">
-                        <Field>
-                            <FieldLabel>@L["TimeOut"] *</FieldLabel>
-                            <NumericPicker TValue="int" @bind-Value="@NewRegion.TimeOut"  Min="RegionConsts.TimeOutMinLength" Max="RegionConsts.TimeOutMaxLength" Decimals="0" >
-                                <Feedback>
-                                    <ValidationError />
-                                </Feedback>
-                             </NumericPicker>
-                        </Field>
-                     </Validation>
-
-
                     <Field>
-                        <Check TValue="bool" @bind-Checked="@NewRegion.Enable" >@L["Enable"]</Check>
+                        <FieldLabel>市</FieldLabel>
+                        <Select TValue="RegionJsonModel" Disabled="@(selectedProvince == null)" SelectedValueChanged="OnCityChanged">
+                            <SelectItem></SelectItem>
+                            @if (selectedProvince != null)
+                            {
+                                @foreach (var itemValue in selectedProvince!.Children)
+                                {
+                                    <SelectItem TValue="RegionJsonModel" Value="@itemValue">@itemValue.Name</SelectItem>
+                                }
+                            }
+                        </Select>
                     </Field>
 
-                    
-                    
+                    <Field>
+                        <FieldLabel>区/县</FieldLabel>
+                        <Select TValue="RegionJsonModel" Disabled="@(selectedCity == null)" SelectedValueChanged="OnDisChanged">
+                            <SelectItem></SelectItem>
+                            @if (selectedCity != null)
+                            {
+                                @foreach (var itemValue in selectedCity!.Children)
+                                {
+                                    <SelectItem TValue="RegionJsonModel" Value="@itemValue">@itemValue.Name</SelectItem>
+                                }
+                            }
+                        </Select>
+                    </Field>
+
                 </Validations>
             </ModalBody>
             <ModalFooter>
@@ -269,85 +242,10 @@
                         Clicked="CloseCreateRegionModalAsync">
                     @L["Cancel"]
                 </Button>
-                <SubmitButton Form="CreateRegionForm" Clicked="CreateRegionAsync"/>
+                <SubmitButton Form="CreateRegionForm" Clicked="CreateRegionAsync" />
 
             </ModalFooter>
         </Form>
 
     </ModalContent>
 </Modal>
-
-@* ************************* EDIT MODAL ************************* *@
-<Modal @ref="EditRegionModal" Closing="@EditRegionModal.CancelClosingModalWhenFocusLost">
-    <ModalContent Centered="true">
-
-        <Form id="EditRegionForm">
-            <ModalHeader>
-                <ModalTitle>@L["Update"]</ModalTitle>
-                <CloseButton Clicked="CloseEditRegionModalAsync" />
-            </ModalHeader>
-            <ModalBody>
-                <Validations @ref="@EditingRegionValidations"
-                            Mode="ValidationMode.Auto"
-                            Model="@EditingRegion"
-                            ValidateOnLoad="false">
-                    
-                    
-                    <Field>
-                        <FieldLabel>@L["Type"]</FieldLabel>
-                        <Select TValue="EngineTypeEnum" @bind-SelectedValue="@EditingRegion.Type" >
-                            @foreach (var itemValue in Enum.GetValues(typeof(EngineTypeEnum)))
-                            {
-                                <SelectItem TValue="EngineTypeEnum" Value="@((EngineTypeEnum) itemValue)">
-                                    @L[$"Enum:EngineTypeEnum.{((EngineTypeEnum) itemValue).ToString("d")}"]
-                                </SelectItem>
-                            }
-                        </Select>
-                    </Field>
-
-
-                    <Validation MessageLocalizer="@LH.Localize">
-                        <Field>
-                            <FieldLabel>@L["Host"] *</FieldLabel>
-                            <TextEdit @bind-Text="@EditingRegion.Host" MaxLength="RegionConsts.HostMaxLength" >
-                                <Feedback>
-                                    <ValidationError />
-                                </Feedback>
-                            </TextEdit>
-                        </Field>
-                    </Validation>
-
-
-                    <Validation MessageLocalizer="@LH.Localize">
-                        <Field>
-                            <FieldLabel>@L["TimeOut"] *</FieldLabel>
-                            <NumericPicker TValue="int" @bind-Value="@EditingRegion.TimeOut"  Min="RegionConsts.TimeOutMinLength" Max="RegionConsts.TimeOutMaxLength" Decimals="0" >
-                                <Feedback>
-                                    <ValidationError />
-                                </Feedback>
-                             </NumericPicker>
-                        </Field>
-                     </Validation>
-
-
-                    <Field>
-                        <Check TValue="bool" @bind-Checked="@EditingRegion.Enable" >@L["Enable"]</Check>
-                    </Field>
-
-                    
-                    
-                </Validations>
-            </ModalBody>
-            <ModalFooter>
-                <Button Color="Color.Secondary"
-                        Clicked="CloseEditRegionModalAsync">
-                    @L["Cancel"]
-                </Button>
-                <SubmitButton Form="EditRegionForm" Clicked="UpdateRegionAsync" />
-
-            </ModalFooter>
-        </Form>
-
-    </ModalContent>
-</Modal>
-

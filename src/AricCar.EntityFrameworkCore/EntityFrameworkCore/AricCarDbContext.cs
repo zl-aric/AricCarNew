@@ -24,6 +24,8 @@ public class AricCarDbContext :
 {
     /* Add DbSet properties for your Aggregate Roots / Entities here. */
 
+    public DbSet<Region> Regions { get; set; } = null!;
+
     #region Entities from the modules
 
     /* Notice: We only implemented IIdentityProDbContext
