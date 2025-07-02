@@ -61,15 +61,33 @@
                     </Button>
                 </div>
             </div>
-
-            <div style="display: @(!ShowAdvancedFilters ? "none" : "block")" class="mt-3">
+            <Row>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>省</FieldLabel>
+                        <Select TValue="int" SelectedValue="@selectedValue" SelectedValueChanged="@OnSelectedValueChanged">
+                            <SelectItem Value="1">One</SelectItem>
+                            <SelectItem Value="2">Two</SelectItem>
+                            <SelectItem Value="3">Three</SelectItem>
+                            <SelectItem Value="4">Four</SelectItem>
+                        </Select>
+                    </Field>
+                </Column>
+            </Row>
+            @*  <div style="display: @(!ShowAdvancedFilters ? "none" : "block")" class="mt-3">
                 <Row>
-
                     <Column ColumnSize="ColumnSize.Is3">
                         <Field>
                             <FieldLabel>省</FieldLabel>
                             <Select @bind-SelectedValue="@Filter.ProvinceCode">
-                                <SelectItem></SelectItem>
+                                <SelectItem Value="@string.Empty"></SelectItem>
+                                @if (ProvicnesList != null)
+                                {
+                                    @foreach (var item in ProvicnesList!.Items)
+                                    {
+                                        <SelectItem Value="@item.code">@item.name</SelectItem>
+                                    }
+                                }
                             </Select>
                         </Field>
                     </Column>
@@ -94,7 +112,7 @@
                         </Field>
                     </Column>
                 </Row>
-            </div>
+            </div> *@
 
         </Row>
 
@@ -181,7 +199,7 @@
 
         <Form id="CreateRegionForm">
             <ModalHeader>
-                <ModalTitle>@L["NewRegion"]</ModalTitle>
+                <ModalTitle>创建新区域</ModalTitle>
                 <CloseButton Clicked="CloseCreateRegionModalAsync" />
             </ModalHeader>
             <ModalBody>
@@ -191,43 +209,34 @@
                              ValidateOnLoad="false">
                     <Field>
                         <FieldLabel>省</FieldLabel>
-                        <Select TValue="RegionItem" SelectedValue="@NewRegion.Province" SelectedValueChanged="OnProvinceChanged">
-                            @if (ProvicnesList != null)
-                            {
-                                @foreach (var itemValue in ProvicnesList!.Items)
-                                {
-                                    <SelectItem TValue="RegionItem" Value="@itemValue">@itemValue.name</SelectItem>
-                                }
-                            }
-                        </Select>
+                        <SelectList TItem="RegionItem"
+                                    TValue="RegionItem"
+                                    Data="@ProvicnesList"
+                                    TextField="@((item)=>item.name)"
+                                    ValueField="@((item)=>item)"
+                                    @bind-SelectedValue="@NewRegion.Province"
+                                    @bind-SelectedValue:after="OnProvinceChanged" />
                     </Field>
 
                     <Field>
                         <FieldLabel>市</FieldLabel>
-                        <Select TValue="RegionItem" Disabled="@(NewRegion.Province == null)" SelectedValue="@NewRegion.City" SelectedValueChanged="OnCityChanged">
-                            <SelectItem></SelectItem>
-                            @if (NewRegion.Province != null)
-                            {
-                                @foreach (var itemValue in NewRegion.Province!.children)
-                                {
-                                    <SelectItem TValue="RegionItem" Value="@itemValue">@itemValue.name</SelectItem>
-                                }
-                            }
-                        </Select>
+                        <SelectList TItem="RegionItem"
+                                    TValue="RegionItem"
+                                    Data="@Cities"
+                                    TextField="@((item)=>item.name)"
+                                    ValueField="@((item)=>item)"
+                                    @bind-SelectedValue="@NewRegion.City" 
+                                    @bind-SelectedValue:after="OnCityChanged" />
                     </Field>
 
                     <Field>
                         <FieldLabel>区/县</FieldLabel>
-                        <Select TValue="RegionItem" Disabled="@(NewRegion.City == null)" SelectedValue="@NewRegion.District" SelectedValueChanged="OnDisChanged">
-                            <SelectItem></SelectItem>
-                            @if (NewRegion.City != null)
-                            {
-                                @foreach (var itemValue in NewRegion.City!.children)
-                                {
-                                    <SelectItem TValue="RegionItem" Value="@itemValue">@itemValue.name</SelectItem>
-                                }
-                            }
-                        </Select>
+                        <SelectList TItem="RegionItem"
+                                    TValue="RegionItem"
+                                    Data="@Districts"
+                                    TextField="@((item)=>item.name)"
+                                    ValueField="@((item)=>item)"
+                                    @bind-SelectedValue="@NewRegion.District" />
                     </Field>
 
                 </Validations>

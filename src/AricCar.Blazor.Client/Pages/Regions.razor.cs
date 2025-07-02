@@ -39,7 +39,7 @@ public partial class Regions
     protected string SelectedEditTab = "Region-edit-tab";
     private RegionDto? SelectedRegion;
 
-    private ListResultDto<RegionItem>? ProvicnesList { get; set; }
+    private List<RegionItem> ProvicnesList { get; set; } = [];
 
     public Regions()
     {
@@ -52,6 +52,16 @@ public partial class Regions
             Sorting = CurrentSorting
         };
         RegionList = new List<RegionDto>();
+    }
+
+    int selectedValue;
+
+    Task OnSelectedValueChanged(int value)
+    {
+        selectedValue = value;
+        Console.WriteLine(selectedValue);
+
+        return Task.CompletedTask;
     }
 
     protected override async Task OnInitializedAsync()
@@ -183,22 +193,22 @@ public partial class Regions
         }
     }
 
-  
-    private Task OnProvinceChanged(RegionItem value)
+    // 新增这两个属性用于存储当前可选的市和区
+    private IEnumerable<RegionItem>? Cities => NewRegion.Province?.children;
+    private IEnumerable<RegionItem>? Districts => NewRegion.City?.children;
+
+    // 省份变更时，清空市、区
+    private Task OnProvinceChanged()
     {
-        NewRegion.Province = value;
+        NewRegion.City = null;
+        NewRegion.District = null;
         return Task.CompletedTask;
     }
 
-    private Task OnCityChanged(RegionItem? value)
+    // 市变更时，清空区
+    private Task OnCityChanged()
     {
-        NewRegion.City = value;
-        return Task.CompletedTask;
-    }
-
-    private Task OnDisChanged(RegionItem? value)
-    {
-        NewRegion.District = value;
+        NewRegion.District = null;
         return Task.CompletedTask;
     }
 }

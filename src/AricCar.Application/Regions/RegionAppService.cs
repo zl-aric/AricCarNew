@@ -52,11 +52,11 @@ namespace AricCar.Regions
         }
 
 
-        public async Task<ListResultDto<RegionItem>> GetRegionJsonListAsync()
+        public async Task<List<RegionItem>> GetRegionJsonListAsync()
         {
             var jsonStr = await File.ReadAllTextAsync("wwwroot/region.json");
             var regions = System.Text.Json.JsonSerializer.Deserialize<List<RegionItem>>(jsonStr);
-            return new ListResultDto<RegionItem>(regions!);
+            return regions != null ? regions : new List<RegionItem>();
         }
     }
 }

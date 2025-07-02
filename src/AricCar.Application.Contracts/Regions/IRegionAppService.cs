@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
@@ -15,6 +16,6 @@ namespace AricCar.Regions
 
         Task<RegionDto> CreateAsync(RegionCreateDto input);
 
-        Task<ListResultDto<RegionItem>> GetRegionJsonListAsync();
+        Task<List<RegionItem>> GetRegionJsonListAsync();
     }
 }
