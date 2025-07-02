@@ -38,7 +38,7 @@ namespace AricCar.Regions
             var isExist = await _regionRepository.AnyAsync(x => x.ProvincialCode == provincialCode && x.DistrictCode == districtCode && x.CityCode == cityCode);
             if (isExist)
             {
-                throw new RegionRepeatException();
+                throw new UserFriendlyException("区域重复,无需重复添加");
             }
 
             var region = new Region(

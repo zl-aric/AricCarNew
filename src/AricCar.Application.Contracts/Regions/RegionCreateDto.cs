@@ -8,24 +8,21 @@ namespace AricCar.Regions
         [StringLength(RegionConsts.RegionCodeMaxLength, MinimumLength = RegionConsts.RegionCodeMinLength)]
         public string ProvincialCode { get; set; }
 
-        [Required]
-        [StringLength(RegionConsts.RegionNameMaxLength, MinimumLength = RegionConsts.RegionNameMinLength)]
+      
         public string ProvincialName { get; set; }
 
         [Required]
         [StringLength(RegionConsts.RegionCodeMaxLength, MinimumLength = RegionConsts.RegionCodeMinLength)]
         public string CityCode { get; set; }
 
-        [Required]
-        [StringLength(RegionConsts.RegionNameMaxLength, MinimumLength = RegionConsts.RegionNameMinLength)]
+      
         public string CityName { get; set; }
 
         [Required]
         [StringLength(RegionConsts.RegionCodeMaxLength, MinimumLength = RegionConsts.RegionCodeMinLength)]
         public string DistrictCode { get; set; }
 
-        [Required]
-        [StringLength(RegionConsts.RegionNameMaxLength, MinimumLength = RegionConsts.RegionNameMinLength)]
+       
         public string DistrictName { get; set; }
     }
 }

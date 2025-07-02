@@ -175,39 +175,38 @@ public partial class Regions
     }
 
 
-    private Task OnProvinceChanged(string value)
+    private Task OnProvinceChanged()
     {
-        NewRegion.ProvincialCode = value;
+        if (!string.IsNullOrWhiteSpace(NewRegion.ProvincialCode))
+        {
+            SelectedProvince = ProvicnesList.FirstOrDefault(p => p.code == NewRegion.ProvincialCode)!;
+            NewRegion.ProvincialName = SelectedProvince?.name ?? string.Empty;
+        }
+
         NewRegion.CityCode = string.Empty;
         NewRegion.CityName = string.Empty;
         NewRegion.DistrictCode = string.Empty;
         NewRegion.DistrictName = string.Empty;
-        if (!string.IsNullOrWhiteSpace(value))
-        {
-            SelectedProvince = ProvicnesList.FirstOrDefault(p => p.code == value)!;
-            NewRegion.ProvincialName = SelectedProvince.name;
-        }
+
         return Task.CompletedTask;
     }
 
-    private Task OnCityChanged(string value)
+    private Task OnCityChanged()
     {
-        NewRegion.CityCode = value;
         NewRegion.DistrictCode = string.Empty;
         NewRegion.DistrictName = string.Empty;
-        if (!string.IsNullOrWhiteSpace(value))
+        if (!string.IsNullOrWhiteSpace(NewRegion.CityCode))
         {
-            SelectedCity = Cities?.FirstOrDefault(p => p.code == value)!;
+            SelectedCity = Cities?.FirstOrDefault(p => p.code == NewRegion.CityCode)!;
             NewRegion.CityName = SelectedCity.name;
         }
         return Task.CompletedTask;
     }
-    private Task OnDistrictChanged(string value)
+    private Task OnDistrictChanged()
     {
-        NewRegion.DistrictCode = value;
-        if (!string.IsNullOrWhiteSpace(value))
+        if (!string.IsNullOrWhiteSpace(NewRegion.DistrictCode))
         {
-            SelectedDistrict = Districts?.FirstOrDefault(p => p.code == value)!;
+            SelectedDistrict = Districts?.FirstOrDefault(p => p.code == NewRegion.DistrictCode)!;
             NewRegion.DistrictName = SelectedDistrict.name;
         }
         return Task.CompletedTask;

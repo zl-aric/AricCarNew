@@ -205,11 +205,12 @@
                                         Data="@ProvicnesList"
                                         TextField="@((item)=>item.name)"
                                         ValueField="@((item)=>item.code)"
+                                        DefaultItemValue="string.Empty"
                                         DefaultItemText="ÇëÑ¡Ôñ"
-                                        SelectedValue="@NewRegion.ProvincialCode"
-                                        SelectedValueChanged="OnProvinceChanged">
+                                        @bind-SelectedValue="@NewRegion.ProvincialCode"
+                                        @bind-SelectedValue:after="@OnProvinceChanged">
                                 <Feedback>
-                                    <ValidationError/>
+                                    <ValidationError />
                                 </Feedback>
                             </SelectList>
                         </Field>
@@ -223,9 +224,11 @@
                                         Data="@Cities"
                                         TextField="@((item)=>item.name)"
                                         ValueField="@((item)=>item.code)"
+                                        DefaultItemValue="string.Empty"
                                         DefaultItemText="ÇëÑ¡Ôñ"
-                                        SelectedValue="@NewRegion.CityCode"
-                                        SelectedValueChanged="OnCityChanged">
+                                        Disabled="@(Cities==null || Cities.Count()==0)"
+                                        @bind-SelectedValue="@NewRegion.CityCode"
+                                        @bind-SelectedValue:after="@OnCityChanged">
                                 <Feedback>
                                     <ValidationError />
                                 </Feedback>
@@ -239,11 +242,13 @@
                             <SelectList TItem="RegionItem"
                                         TValue="string"
                                         Data="@Districts"
+                                        DefaultItemValue="string.Empty"
                                         DefaultItemText="ÇëÑ¡Ôñ"
+                                        Disabled="@(Districts==null || Districts.Count()==0)"
                                         TextField="@((item)=>item.name)"
                                         ValueField="@((item)=>item.code)"
-                                        SelectedValue="@NewRegion.DistrictCode"
-                                        SelectedValueChanged="OnDistrictChanged">
+                                        @bind-SelectedValue="@NewRegion.DistrictCode"
+                                        @bind-SelectedValue:after="@OnDistrictChanged">
                                 <Feedback>
                                     <ValidationError />
                                 </Feedback>
