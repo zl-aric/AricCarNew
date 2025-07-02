@@ -29,22 +29,14 @@ namespace AricCar.Regions
             if (await _repository.GetCountAsync() > 0)
                 return;
             var jsonStr = await File.ReadAllTextAsync("wwwroot/region.json");
-            var regions = System.Text.Json.JsonSerializer.Deserialize<List<RegionJsonModel>>(jsonStr);
-            var gdProvince = regions!.Where(x => x.Name == "广东省").FirstOrDefault();
-            var szCity = gdProvince!.Children.Where(x => x.Name == "深圳市").FirstOrDefault();
-            // 广东省
-            var region = new Region(_guidGenerator.Create(), gdProvince.Code, gdProvince.Name);
-            await _repository.InsertAsync(region);
-            // 广东省深圳市
-            region = new Region(_guidGenerator.Create(), gdProvince.Code, gdProvince.Name, szCity.Code, szCity.Name);
-            await _repository.InsertAsync(region);
-            foreach (var item in szCity!.Children)
+            var regions = System.Text.Json.JsonSerializer.Deserialize<List<RegionItem>>(jsonStr);
+            var gdProvince = regions!.Where(x => x.name == "广东省").FirstOrDefault();
+            var szCity = gdProvince!.children.Where(x => x.name == "深圳市").FirstOrDefault();
+            foreach (var item in szCity!.children)
             {
-                region = new Region(_guidGenerator.Create(), gdProvince.Code, gdProvince.Name, szCity.Code, szCity.Name, item.Code, item.Name);
+                var region = new Region(_guidGenerator.Create(), gdProvince.code, gdProvince.name, szCity.code, szCity.name, item.code, item.name);
                 await _repository.InsertAsync(region);
             }
-
-            throw new NotImplementedException();
         }
     }
 }

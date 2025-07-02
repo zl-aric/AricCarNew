@@ -40,7 +40,7 @@ namespace AricCar.Regions
         [Authorize(AricCarPermissions.Regions.Create)]
         public async Task<RegionDto> CreateAsync(RegionCreateDto input)
         {
-            var engineInstance = await _regionManager.CreateAsync(input.ProvincialCode, input.ProvincialName, input.CityCode, input.CityName, input.DistrictCode, input.DistrictName);
+            var engineInstance = await _regionManager.CreateAsync(input.Province.code, input.Province.name, input.City?.code, input.City?.name, input.District?.code, input.District?.name);
 
             return ObjectMapper.Map<Region, RegionDto>(engineInstance);
         }
@@ -59,11 +59,11 @@ namespace AricCar.Regions
             return ObjectMapper.Map<Region, RegionDto>(engineInstance);
         }
 
-        public async Task<ListResultDto<RegionJsonModel>> GetRegionJsonListAsync()
+        public async Task<ListResultDto<RegionItem>> GetRegionJsonListAsync()
         {
             var jsonStr = await File.ReadAllTextAsync("wwwroot/region.json");
-            var regions = System.Text.Json.JsonSerializer.Deserialize<List<RegionJsonModel>>(jsonStr);
-            return new ListResultDto<RegionJsonModel>(regions!);
+            var regions = System.Text.Json.JsonSerializer.Deserialize<List<RegionItem>>(jsonStr);
+            return new ListResultDto<RegionItem>(regions!);
         }
     }
 }

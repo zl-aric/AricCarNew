@@ -39,10 +39,7 @@ public partial class Regions
     protected string SelectedEditTab = "Region-edit-tab";
     private RegionDto? SelectedRegion;
 
-    private ListResultDto<RegionJsonModel>? ProvicnesList { get; set; }
-    private RegionJsonModel? selectedProvince;
-    private RegionJsonModel? selectedCity;
-    private RegionJsonModel? selectedDistrict;
+    private ListResultDto<RegionItem>? ProvicnesList { get; set; }
 
     public Regions()
     {
@@ -220,28 +217,21 @@ public partial class Regions
         SelectedEditTab = name;
     }
 
-    private Task OnProvinceChanged(RegionJsonModel value)
+    private Task OnProvinceChanged(RegionItem value)
     {
-        selectedProvince = value;
-        NewRegion.ProvincialCode = value.Code;
-        NewRegion.ProvincialName = value.Name;
-
+        NewRegion.Province = value;
         return Task.CompletedTask;
     }
 
-    private Task OnCityChanged(RegionJsonModel? value)
+    private Task OnCityChanged(RegionItem? value)
     {
-        selectedCity = value;
-        NewRegion.CityCode = value?.Code;
-        NewRegion.CityName = value?.Name;
+        NewRegion.City = value;
         return Task.CompletedTask;
     }
 
-    private Task OnDisChanged(RegionJsonModel? value)
+    private Task OnDisChanged(RegionItem? value)
     {
-        selectedDistrict = value;
-        NewRegion.DistrictCode = value?.Code;
-        NewRegion.DistrictName = value?.Name;
+        NewRegion.District = value;
         return Task.CompletedTask;
     }
 }

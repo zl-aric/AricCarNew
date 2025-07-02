@@ -22,10 +22,6 @@
 @inherits AricCarComponentBase
 @inject IRegionAppService RegionsAppService
 @inject IUiMessageService UiMessageService
-
-
-#nullable enable
-
 @* ************************* PAGE HEADER ************************* *@
 <PageHeader Title="@L["Regions"]" BreadcrumbItems="BreadcrumbItems" Toolbar="Toolbar">
 
@@ -138,10 +134,6 @@
                     <DisplayTemplate>
                         <EntityActions TItem="RegionDto" EntityActionsColumn="@EntityActionsColumn">
                             <EntityAction TItem="RegionDto"
-                                          Visible="@CanEditRegion"
-                                          Clicked="async () => await OpenEditRegionModalAsync(context)"
-                                          Text="@L["Edit"]"></EntityAction>
-                            <EntityAction TItem="RegionDto"
                                           Visible="@CanDeleteRegion"
                                           Clicked="() => DeleteRegionAsync(context)"
                                           ConfirmationMessage="@(()=> L["DeleteConfirmationMessage"])"
@@ -199,23 +191,26 @@
                              ValidateOnLoad="false">
                     <Field>
                         <FieldLabel>省</FieldLabel>
-                        <Select TValue="RegionJsonModel" SelectedValueChanged="OnProvinceChanged">
-                            @foreach (var itemValue in ProvicnesList!.Items)
+                        <Select TValue="RegionItem" SelectedValue="@NewRegion.Province" SelectedValueChanged="OnProvinceChanged">
+                            @if (ProvicnesList != null)
                             {
-                                <SelectItem TValue="RegionJsonModel" Value="@itemValue">@itemValue.Name</SelectItem>
+                                @foreach (var itemValue in ProvicnesList!.Items)
+                                {
+                                    <SelectItem TValue="RegionItem" Value="@itemValue">@itemValue.name</SelectItem>
+                                }
                             }
                         </Select>
                     </Field>
 
                     <Field>
                         <FieldLabel>市</FieldLabel>
-                        <Select TValue="RegionJsonModel" Disabled="@(selectedProvince == null)" SelectedValueChanged="OnCityChanged">
+                        <Select TValue="RegionItem" Disabled="@(NewRegion.Province == null)" SelectedValue="@NewRegion.City" SelectedValueChanged="OnCityChanged">
                             <SelectItem></SelectItem>
-                            @if (selectedProvince != null)
+                            @if (NewRegion.Province != null)
                             {
-                                @foreach (var itemValue in selectedProvince!.Children)
+                                @foreach (var itemValue in NewRegion.Province!.children)
                                 {
-                                    <SelectItem TValue="RegionJsonModel" Value="@itemValue">@itemValue.Name</SelectItem>
+                                    <SelectItem TValue="RegionItem" Value="@itemValue">@itemValue.name</SelectItem>
                                 }
                             }
                         </Select>
@@ -223,13 +218,13 @@
 
                     <Field>
                         <FieldLabel>区/县</FieldLabel>
-                        <Select TValue="RegionJsonModel" Disabled="@(selectedCity == null)" SelectedValueChanged="OnDisChanged">
+                        <Select TValue="RegionItem" Disabled="@(NewRegion.City == null)" SelectedValue="@NewRegion.District" SelectedValueChanged="OnDisChanged">
                             <SelectItem></SelectItem>
-                            @if (selectedCity != null)
+                            @if (NewRegion.City != null)
                             {
-                                @foreach (var itemValue in selectedCity!.Children)
+                                @foreach (var itemValue in NewRegion.City!.children)
                                 {
-                                    <SelectItem TValue="RegionJsonModel" Value="@itemValue">@itemValue.Name</SelectItem>
+                                    <SelectItem TValue="RegionItem" Value="@itemValue">@itemValue.name</SelectItem>
                                 }
                             }
                         </Select>

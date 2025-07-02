@@ -54,6 +54,7 @@ public class AricCarMenuContributor : IMenuContributor
 
         administration.SetSubItemOrder(IdentityMenuNames.GroupName, 2);
         administration.SetSubItemOrder(SettingManagementMenus.GroupName, 3);
+        context.Menu.AddItem(new ApplicationMenuItem(AricCarMenus.Regions, "区域管理", "/Regions", icon: "fa fa-map-marker", order: 4));
     }
     
     private async Task ConfigureUserMenuAsync(MenuConfigurationContext context)

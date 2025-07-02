@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace AricCar.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -405,6 +405,32 @@ namespace AricCar.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AbpUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AppRegions",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    ProvincialCode = table.Column<string>(type: "TEXT", maxLength: 10, nullable: false),
+                    ProvincialName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    CityCode = table.Column<string>(type: "TEXT", maxLength: 10, nullable: true),
+                    CityName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
+                    DistrictCode = table.Column<string>(type: "TEXT", maxLength: 10, nullable: true),
+                    DistrictName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
+                    ExtraProperties = table.Column<string>(type: "TEXT", nullable: false),
+                    ConcurrencyStamp = table.Column<string>(type: "TEXT", maxLength: 40, nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    CreatorId = table.Column<Guid>(type: "TEXT", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    LastModifierId = table.Column<Guid>(type: "TEXT", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "INTEGER", nullable: false, defaultValue: false),
+                    DeleterId = table.Column<Guid>(type: "TEXT", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppRegions", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -1112,6 +1138,9 @@ namespace AricCar.Migrations
 
             migrationBuilder.DropTable(
                 name: "AbpUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "AppRegions");
 
             migrationBuilder.DropTable(
                 name: "OpenIddictScopes");

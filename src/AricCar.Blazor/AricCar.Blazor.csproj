@@ -77,7 +77,7 @@
 
   <ItemGroup>
     <Content Update="wwwroot\region.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 
