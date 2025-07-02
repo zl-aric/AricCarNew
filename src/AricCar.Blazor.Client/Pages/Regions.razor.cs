@@ -35,11 +35,13 @@ public partial class Regions
     private Modal EditRegionModal { get; set; } = new();
     private GetRegionsInput Filter { get; set; }
     private DataGridEntityActionsColumn<RegionDto> EntityActionsColumn { get; set; } = new();
-    protected string SelectedCreateTab = "Region-create-tab";
-    protected string SelectedEditTab = "Region-edit-tab";
-    private RegionDto? SelectedRegion;
 
-    private List<RegionItem> ProvicnesList { get; set; } = [];
+    private RegionItem? SelectedProvince = null;
+    private RegionItem? SelectedCity = null;
+    private RegionItem? SelectedDistrict = null;
+    private IEnumerable<RegionItem>? Cities => SelectedProvince?.children;
+    private IEnumerable<RegionItem>? Districts => SelectedCity?.children;
+    private IEnumerable<RegionItem> ProvicnesList { get; set; } = [];
 
     public Regions()
     {
@@ -54,15 +56,7 @@ public partial class Regions
         RegionList = new List<RegionDto>();
     }
 
-    int selectedValue;
 
-    Task OnSelectedValueChanged(int value)
-    {
-        selectedValue = value;
-        Console.WriteLine(selectedValue);
-
-        return Task.CompletedTask;
-    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -140,9 +134,9 @@ public partial class Regions
         NewRegion = new RegionCreateDto
         {
         };
-
-        SelectedCreateTab = "Region-create-tab";
-
+        SelectedProvince = null;
+        SelectedCity = null;
+        SelectedDistrict = null;
         await NewRegionValidations.ClearAll();
         await CreateRegionModal.Show();
     }
@@ -153,19 +147,6 @@ public partial class Regions
         {
         };
         await CreateRegionModal.Hide();
-    }
-
-    private async Task OpenEditRegionModalAsync(RegionDto input)
-    {
-        SelectedEditTab = "Region-edit-tab";
-
-        var Region = await RegionsAppService.GetAsync(input.Id);
-
-        EditingRegionId = Region.Id;
-        EditingRegion = ObjectMapper.Map<RegionDto, RegionUpdateDto>(Region);
-
-        await EditingRegionValidations.ClearAll();
-        await EditRegionModal.Show();
     }
 
     private async Task DeleteRegionAsync(RegionDto input)
@@ -193,22 +174,42 @@ public partial class Regions
         }
     }
 
-    // 新增这两个属性用于存储当前可选的市和区
-    private IEnumerable<RegionItem>? Cities => NewRegion.Province?.children;
-    private IEnumerable<RegionItem>? Districts => NewRegion.City?.children;
 
-    // 省份变更时，清空市、区
-    private Task OnProvinceChanged()
+    private Task OnProvinceChanged(string value)
     {
-        NewRegion.City = null;
-        NewRegion.District = null;
+        NewRegion.ProvincialCode = value;
+        NewRegion.CityCode = string.Empty;
+        NewRegion.CityName = string.Empty;
+        NewRegion.DistrictCode = string.Empty;
+        NewRegion.DistrictName = string.Empty;
+        if (!string.IsNullOrWhiteSpace(value))
+        {
+            SelectedProvince = ProvicnesList.FirstOrDefault(p => p.code == value)!;
+            NewRegion.ProvincialName = SelectedProvince.name;
+        }
         return Task.CompletedTask;
     }
 
-    // 市变更时，清空区
-    private Task OnCityChanged()
+    private Task OnCityChanged(string value)
     {
-        NewRegion.District = null;
+        NewRegion.CityCode = value;
+        NewRegion.DistrictCode = string.Empty;
+        NewRegion.DistrictName = string.Empty;
+        if (!string.IsNullOrWhiteSpace(value))
+        {
+            SelectedCity = Cities?.FirstOrDefault(p => p.code == value)!;
+            NewRegion.CityName = SelectedCity.name;
+        }
+        return Task.CompletedTask;
+    }
+    private Task OnDistrictChanged(string value)
+    {
+        NewRegion.DistrictCode = value;
+        if (!string.IsNullOrWhiteSpace(value))
+        {
+            SelectedDistrict = Districts?.FirstOrDefault(p => p.code == value)!;
+            NewRegion.DistrictName = SelectedDistrict.name;
+        }
         return Task.CompletedTask;
     }
 }

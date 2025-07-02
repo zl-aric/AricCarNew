@@ -40,7 +40,7 @@ namespace AricCar.Regions
         [Authorize(AricCarPermissions.Regions.Create)]
         public async Task<RegionDto> CreateAsync(RegionCreateDto input)
         {
-            var engineInstance = await _regionManager.CreateAsync(input.Province.code, input.Province.name, input.City?.code, input.City?.name, input.District?.code, input.District?.name);
+            var engineInstance = await _regionManager.CreateAsync(input.ProvincialCode, input.ProvincialName, input.CityCode, input.CityName, input.DistrictCode, input.DistrictName);
 
             return ObjectMapper.Map<Region, RegionDto>(engineInstance);
         }
