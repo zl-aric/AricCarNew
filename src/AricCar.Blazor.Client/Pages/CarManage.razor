@@ -158,16 +158,13 @@
                         </Field>
                     </Validation>
 
-                    <Validation MessageLocalizer="@LH.Localize">
-                        <Field>
-                            <FieldLabel>图片</FieldLabel>
-                            <FilePicker Multiple Upload="OnCarImageUpload" Placeholder="请至少上传一张图片" ShowMode="FilePickerShowMode.List">
-                                <Feedback>
-                                    <ValidationError />
-                                </Feedback>
-                            </FilePicker>
-                        </Field>
-                    </Validation>
+
+                    <Field>
+                        <FilePicker Multiple Placeholder="请至少上传一张图片" ShowMode="FilePickerShowMode.List" >
+                          
+                        </FilePicker>
+                    </Field>
+                 
                 </Validations>
             </ModalBody>
             <ModalFooter>
