@@ -1,10 +1,11 @@
-using System;
-using System.Threading.Tasks;
+using AricCar.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Events;
+using System;
+using System.Threading.Tasks;
 
 namespace AricCar.Blazor;
 
@@ -42,6 +43,9 @@ public class Program
             await builder.AddApplicationAsync<AricCarBlazorModule>();
             var app = builder.Build();
             await app.InitializeApplicationAsync();
+
+            await app.Services.GetRequiredService<AricCarDbMigrationService>().MigrateAsync();
+
             await app.RunAsync();
             return 0;
         }

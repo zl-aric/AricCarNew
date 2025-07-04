@@ -1,3 +1,4 @@
+using AricCar.Cars;
 using AricCar.Regions;
 using Microsoft.EntityFrameworkCore;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
@@ -25,6 +26,8 @@ public class AricCarDbContext :
     /* Add DbSet properties for your Aggregate Roots / Entities here. */
 
     public DbSet<Region> Regions { get; set; } = null!;
+
+    public DbSet<Car> Cars { get; set; } = null!;
 
     #region Entities from the modules
 
@@ -91,6 +94,28 @@ public class AricCarDbContext :
             b.Property(x => x.CityName).IsRequired().HasMaxLength(RegionConsts.RegionNameMaxLength);
             b.Property(x => x.DistrictCode).IsRequired().HasMaxLength(RegionConsts.RegionCodeMaxLength);
             b.Property(x => x.DistrictName).IsRequired().HasMaxLength(RegionConsts.RegionNameMaxLength);
+            b.HasAlternateKey(x => x.DistrictCode);
+
+            //b.HasMany<Car>().WithOne().HasForeignKey(x => x.DistrctCode).IsRequired(false).OnDelete(DeleteBehavior.Cascade);
+        });
+
+        builder.Entity<Car>(b =>
+        {
+            b.ToTable(AricCarConsts.DbTablePrefix + "Cars", AricCarConsts.DbSchema);
+            b.ConfigureByConvention();
+            b.Property(x => x.DistrctCode).IsRequired().HasMaxLength(RegionConsts.RegionCodeMaxLength);
+            b.Property(x => x.Brand).IsRequired().HasMaxLength(CarConsts.MaxBranchLength);
+            b.Property(x => x.Type).IsRequired().HasMaxLength(CarConsts.MaxTypeLength);
+            b.Property(x => x.Description).IsRequired(false).HasMaxLength(CarConsts.MaxDescriptionLength);
+            b.HasMany(x => x.Images).WithOne().IsRequired().OnDelete(DeleteBehavior.Cascade);
+            b.HasOne(x => x.Region).WithMany().IsRequired().HasForeignKey(x => x.DistrctCode).HasPrincipalKey(x => x.DistrictCode).OnDelete(DeleteBehavior.Cascade);
+        });
+
+        builder.Entity<CarImage>(b =>
+        {
+            b.ToTable(AricCarConsts.DbTablePrefix + "CarImages", AricCarConsts.DbSchema);
+            b.ConfigureByConvention();
+            b.Property(x => x.Url).IsRequired().HasMaxLength(CarConsts.MaxImageUrlLength);
         });
     }
 }
