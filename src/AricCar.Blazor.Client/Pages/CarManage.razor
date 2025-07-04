@@ -147,7 +147,7 @@
                         </Field>
                     </Validation>
 
-                    <Validation MessageLocalizer="@LH.Localize">
+                    <Validation MessageLocalizer="@LH.Localize" >
                         <Field>
                             <FieldLabel>描述</FieldLabel>
                             <MemoEdit Rows="5" @bind-Text="@NewCar.Description" Placeholder="请输入描述信息">
@@ -158,13 +158,18 @@
                         </Field>
                     </Validation>
 
-
-                    <Field>
-                        <FilePicker Multiple Placeholder="请至少上传一张图片" ShowMode="FilePickerShowMode.List" >
-                          
-                        </FilePicker>
-                    </Field>
-                 
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>图片</FieldLabel>
+                            <FileEdit Multiple="true"
+                                      Placeholder="请至少上传一张图片"
+                                      Changed="@OnCarImagesChanged">
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </FileEdit>
+                        </Field>
+                    </Validation>
                 </Validations>
             </ModalBody>
             <ModalFooter>

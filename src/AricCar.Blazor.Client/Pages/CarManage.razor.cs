@@ -5,8 +5,10 @@ using Blazorise;
 using Microsoft.AspNetCore.Components;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.AspNetCore.Components.Web.Theming.PageToolbars;
@@ -37,6 +39,7 @@ namespace AricCar.Blazor.Client.Pages
         private IEnumerable<RegionItem>? Cities => SelectedProvince?.children;
         private IEnumerable<RegionItem>? Districts => SelectedCity?.children;
         private IEnumerable<RegionItem> ProvicnesList { get; set; } = [];
+
         [Inject]
         protected IRegionAppService RegionsAppService { get; set; }
 
@@ -93,23 +96,11 @@ namespace AricCar.Blazor.Client.Pages
             await CreateCarModal.Show();
         }
 
-        async Task OnCarImageUpload(FileUploadEventArgs e)
+        private async Task OnCarImagesChanged(FileChangedEventArgs e)
         {
-            try
-            {
-                using (MemoryStream result = new MemoryStream())
-                {
-                    await e.File.OpenReadStream(long.MaxValue).CopyToAsync(result);
-                }
-            }
-            catch (Exception exc)
-            {
-                Console.WriteLine(exc.Message);
-            }
-            finally
-            {
-                this.StateHasChanged();
-            }
+            NewCar.ImageFiles = e.Files.ToList();
+            // Removed the call to ValidateField as Validations does not contain this method
+            await NewCarValidations.ValidateAll();
         }
 
         private async Task GetListAsync()
@@ -172,6 +163,7 @@ namespace AricCar.Blazor.Client.Pages
             }
             return Task.CompletedTask;
         }
+
         private Task OnDistrictChanged()
         {
             if (!string.IsNullOrWhiteSpace(NewCar.DistrictCode))
