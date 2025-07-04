@@ -10,12 +10,16 @@ public class AricCarPermissionDefinitionProvider : PermissionDefinitionProvider
     {
         var myGroup = context.AddGroup(AricCarPermissions.GroupName);
 
-        var fieldKeyValuePairPermission = myGroup.AddPermission(AricCarPermissions.Regions.Default, L("区域管理"));
-        fieldKeyValuePairPermission.AddChild(AricCarPermissions.Regions.Create, L("Permission:Create"));
-        fieldKeyValuePairPermission.AddChild(AricCarPermissions.Regions.Edit, L("Permission:Edit"));
-        fieldKeyValuePairPermission.AddChild(AricCarPermissions.Regions.Delete, L("Permission:Delete"));
-        //Define your own permissions here. Example:
-        //myGroup.AddPermission(AricCarPermissions.MyPermission1, L("Permission:MyPermission1"));
+        var regionPermission = myGroup.AddPermission(AricCarPermissions.Regions.Default, L("区域管理"));
+        regionPermission.AddChild(AricCarPermissions.Regions.Create, L("Permission:Create"));
+        regionPermission.AddChild(AricCarPermissions.Regions.Edit, L("Permission:Edit"));
+        regionPermission.AddChild(AricCarPermissions.Regions.Delete, L("Permission:Delete"));
+
+
+        var carPermission = myGroup.AddPermission(AricCarPermissions.Cars.Default, L("车辆管理"));
+        carPermission.AddChild(AricCarPermissions.Cars.Create, L("Permission:Create"));
+        carPermission.AddChild(AricCarPermissions.Cars.Edit, L("Permission:Edit"));
+        carPermission.AddChild(AricCarPermissions.Cars.Delete, L("Permission:Delete"));
     }
 
     private static LocalizableString L(string name)

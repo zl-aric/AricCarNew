@@ -1,3 +1,4 @@
+using AricCar.Cars;
 using AricCar.Regions;
 using AutoMapper;
 
@@ -11,5 +12,6 @@ public class AricCarApplicationAutoMapperProfile : Profile
          * Alternatively, you can split your mapping configurations
          * into multiple profile classes for a better organization. */
         CreateMap<Region, RegionDto>();
+        CreateMap<Car, CarDto>();
     }
 }

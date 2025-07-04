@@ -1,0 +1,183 @@
+﻿@page "/carmanage"
+@using AricCar.Cars
+@using AricCar.Localization
+@using AricCar.Permissions
+@using AricCar.Regions
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Extensions.Localization
+@using Microsoft.AspNetCore.Components.Web
+@using Blazorise
+@using Blazorise.Components
+@using Blazorise.DataGrid
+@using Volo.Abp.BlazoriseUI
+@using Volo.Abp.BlazoriseUI.Components
+@using Volo.Abp.ObjectMapping
+@using Volo.Abp.AspNetCore.Components.Messages
+@using Volo.Abp.AspNetCore.Components.Web.Theming.Layout
+
+@using Volo.Abp.AspNetCore.Components.Web
+@using Volo.Abp.AspNetCore.Components
+
+@attribute [Authorize(AricCarPermissions.Cars.Default)]
+@inherits AricCarComponentBase
+@inject ICarAppService CarAppService
+@inject IUiMessageService UiMessageService
+@inject AbpBlazorMessageLocalizerHelper<AricCarResource> LH
+
+<PageHeader Title="区域管理" BreadcrumbItems="BreadcrumbItems" Toolbar="Toolbar"></PageHeader>
+
+@* ************************* SEARCH ************************* *@
+<Card>
+    <CardBody>
+        <Row>
+            <div class="col col-md-12 col-lg-12">
+                <div class="mb-3">
+                    <Form id="RegionSearchForm">
+                        <Addons>
+                            <Addon AddonType="AddonType.Body">
+                                <TextEdit @bind-Text="@Filter.FilterText"
+                                          Autofocus="true"
+                                          Placeholder="@L["Search"]">
+                                </TextEdit>
+                            </Addon>
+                            <Addon AddonType="AddonType.End">
+                                <SubmitButton Form="RegionSearchForm" Clicked="GetListAsync">
+                                    <Icon Name="IconName.Search" Class="me-1"></Icon>@L["Search"]
+                                </SubmitButton>
+                            </Addon>
+                        </Addons>
+                    </Form>
+                </div>
+            </div>
+        </Row>
+    </CardBody>
+</Card>
+
+@* ************************* CREATE MODAL ************************* *@
+<Modal @ref="CreateCarModal" Closing="@CreateCarModal.CancelClosingModalWhenFocusLost">
+    <ModalContent Centered="true">
+        <Form id="CreateCarForm">
+            <ModalHeader>
+                <ModalTitle>新增</ModalTitle>
+                <CloseButton Clicked="CloseCreateCarModalAsync" />
+            </ModalHeader>
+            <ModalBody>
+                <Validations @ref="@NewCarValidations"
+                             Mode="ValidationMode.Auto"
+                             Model="@NewCar"
+                             ValidateOnLoad="false">
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>省</FieldLabel>
+                            <SelectList TItem="RegionItem"
+                                        TValue="string"
+                                        Data="@ProvicnesList"
+                                        TextField="@((item)=>item.name)"
+                                        ValueField="@((item)=>item.code)"
+                                        DefaultItemValue="string.Empty"
+                                        DefaultItemText="请选择"
+                                        @bind-SelectedValue="@NewCar.ProvincialCode"
+                                        @bind-SelectedValue:after="@OnProvinceChanged">
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </SelectList>
+                        </Field>
+                    </Validation>
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>市</FieldLabel>
+                            <SelectList TItem="RegionItem"
+                                        TValue="string"
+                                        Data="@Cities"
+                                        TextField="@((item)=>item.name)"
+                                        ValueField="@((item)=>item.code)"
+                                        DefaultItemValue="string.Empty"
+                                        DefaultItemText="请选择"
+                                        Disabled="@(Cities==null || Cities.Count()==0)"
+                                        @bind-SelectedValue="@NewCar.CityCode"
+                                        @bind-SelectedValue:after="@OnCityChanged">
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </SelectList>
+                        </Field>
+                    </Validation>
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>区/县</FieldLabel>
+                            <SelectList TItem="RegionItem"
+                                        TValue="string"
+                                        Data="@Districts"
+                                        DefaultItemValue="string.Empty"
+                                        DefaultItemText="请选择"
+                                        Disabled="@(Districts==null || Districts.Count()==0)"
+                                        TextField="@((item)=>item.name)"
+                                        ValueField="@((item)=>item.code)"
+                                        @bind-SelectedValue="@NewCar.DistrictCode"
+                                        @bind-SelectedValue:after="@OnDistrictChanged">
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </SelectList>
+                        </Field>
+                    </Validation>
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>品牌</FieldLabel>
+                            <TextEdit @bind-Value="@NewCar.Brand" Placeholder="请输入品牌">
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>型号</FieldLabel>
+                            <TextEdit @bind-Value="@NewCar.Type" Placeholder="请输入型号">
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>描述</FieldLabel>
+                            <MemoEdit Rows="5" @bind-Text="@NewCar.Description" Placeholder="请输入描述信息">
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </MemoEdit>
+                        </Field>
+                    </Validation>
+
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>图片</FieldLabel>
+                            <FilePicker Multiple Upload="OnCarImageUpload" Placeholder="请至少上传一张图片" ShowMode="FilePickerShowMode.List">
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </FilePicker>
+                        </Field>
+                    </Validation>
+                </Validations>
+            </ModalBody>
+            <ModalFooter>
+                <Button Color="Color.Secondary"
+                        Clicked="CloseCreateCarModalAsync">
+                    @L["Cancel"]
+                </Button>
+                <SubmitButton Form="CreateCarForm" Clicked="CreateCarAsync" />
+            </ModalFooter>
+        </Form>
+
+    </ModalContent>
+</Modal>
