@@ -55,7 +55,7 @@
 
 @* ************************* CREATE MODAL ************************* *@
 <Modal @ref="CreateCarModal" Closing="@CreateCarModal.CancelClosingModalWhenFocusLost">
-    <ModalContent Centered="true">
+    <ModalContent Centered="true" Size="@ModalSize.Large">
         <Form id="CreateCarForm">
             <ModalHeader>
                 <ModalTitle>新增</ModalTitle>
@@ -66,110 +66,117 @@
                              Mode="ValidationMode.Auto"
                              Model="@NewCar"
                              ValidateOnLoad="false">
-                    <Validation MessageLocalizer="@LH.Localize">
-                        <Field>
-                            <FieldLabel>省</FieldLabel>
-                            <SelectList TItem="RegionItem"
-                                        TValue="string"
-                                        Data="@ProvicnesList"
-                                        TextField="@((item)=>item.name)"
-                                        ValueField="@((item)=>item.code)"
-                                        DefaultItemValue="string.Empty"
-                                        DefaultItemText="请选择"
-                                        @bind-SelectedValue="@NewCar.ProvincialCode"
-                                        @bind-SelectedValue:after="@OnProvinceChanged">
-                                <Feedback>
-                                    <ValidationError />
-                                </Feedback>
-                            </SelectList>
-                        </Field>
-                    </Validation>
 
-                    <Validation MessageLocalizer="@LH.Localize">
-                        <Field>
-                            <FieldLabel>市</FieldLabel>
-                            <SelectList TItem="RegionItem"
-                                        TValue="string"
-                                        Data="@Cities"
-                                        TextField="@((item)=>item.name)"
-                                        ValueField="@((item)=>item.code)"
-                                        DefaultItemValue="string.Empty"
-                                        DefaultItemText="请选择"
-                                        Disabled="@(Cities==null || Cities.Count()==0)"
-                                        @bind-SelectedValue="@NewCar.CityCode"
-                                        @bind-SelectedValue:after="@OnCityChanged">
-                                <Feedback>
-                                    <ValidationError />
-                                </Feedback>
-                            </SelectList>
-                        </Field>
-                    </Validation>
+                    <Row>
+                        <Column>
+                            <Validation MessageLocalizer="@LH.Localize">
+                                <Field>
+                                    <FieldLabel>省</FieldLabel>
+                                    <SelectList TItem="RegionItem"
+                                                TValue="string"
+                                                Data="@ProvicnesList"
+                                                TextField="@((item)=>item.name)"
+                                                ValueField="@((item)=>item.code)"
+                                                DefaultItemValue="string.Empty"
+                                                DefaultItemText="请选择"
+                                                @bind-SelectedValue="@NewCar.ProvincialCode"
+                                                @bind-SelectedValue:after="@OnProvinceChanged">
+                                        <Feedback>
+                                            <ValidationError />
+                                        </Feedback>
+                                    </SelectList>
+                                </Field>
+                            </Validation>
 
-                    <Validation MessageLocalizer="@LH.Localize">
-                        <Field>
-                            <FieldLabel>区/县</FieldLabel>
-                            <SelectList TItem="RegionItem"
-                                        TValue="string"
-                                        Data="@Districts"
-                                        DefaultItemValue="string.Empty"
-                                        DefaultItemText="请选择"
-                                        Disabled="@(Districts==null || Districts.Count()==0)"
-                                        TextField="@((item)=>item.name)"
-                                        ValueField="@((item)=>item.code)"
-                                        @bind-SelectedValue="@NewCar.DistrictCode"
-                                        @bind-SelectedValue:after="@OnDistrictChanged">
-                                <Feedback>
-                                    <ValidationError />
-                                </Feedback>
-                            </SelectList>
-                        </Field>
-                    </Validation>
+                            <Validation MessageLocalizer="@LH.Localize">
+                                <Field>
+                                    <FieldLabel>市</FieldLabel>
+                                    <SelectList TItem="RegionItem"
+                                                TValue="string"
+                                                Data="@Cities"
+                                                TextField="@((item)=>item.name)"
+                                                ValueField="@((item)=>item.code)"
+                                                DefaultItemValue="string.Empty"
+                                                DefaultItemText="请选择"
+                                                Disabled="@(Cities==null || Cities.Count()==0)"
+                                                @bind-SelectedValue="@NewCar.CityCode"
+                                                @bind-SelectedValue:after="@OnCityChanged">
+                                        <Feedback>
+                                            <ValidationError />
+                                        </Feedback>
+                                    </SelectList>
+                                </Field>
+                            </Validation>
 
-                    <Validation MessageLocalizer="@LH.Localize">
-                        <Field>
-                            <FieldLabel>品牌</FieldLabel>
-                            <TextEdit @bind-Value="@NewCar.Brand" Placeholder="请输入品牌">
-                                <Feedback>
-                                    <ValidationError />
-                                </Feedback>
-                            </TextEdit>
-                        </Field>
-                    </Validation>
+                            <Validation MessageLocalizer="@LH.Localize">
+                                <Field>
+                                    <FieldLabel>区/县</FieldLabel>
+                                    <SelectList TItem="RegionItem"
+                                                TValue="string"
+                                                Data="@Districts"
+                                                DefaultItemValue="string.Empty"
+                                                DefaultItemText="请选择"
+                                                Disabled="@(Districts==null || Districts.Count()==0)"
+                                                TextField="@((item)=>item.name)"
+                                                ValueField="@((item)=>item.code)"
+                                                @bind-SelectedValue="@NewCar.DistrictCode"
+                                                @bind-SelectedValue:after="@OnDistrictChanged">
+                                        <Feedback>
+                                            <ValidationError />
+                                        </Feedback>
+                                    </SelectList>
+                                </Field>
+                            </Validation>
+                        </Column>
+                        <Column>
+                            <Validation MessageLocalizer="@LH.Localize">
+                                <Field>
+                                    <FieldLabel>品牌</FieldLabel>
+                                    <TextEdit @bind-Value="@NewCar.Brand" Placeholder="请输入品牌">
+                                        <Feedback>
+                                            <ValidationError />
+                                        </Feedback>
+                                    </TextEdit>
+                                </Field>
+                            </Validation>
 
-                    <Validation MessageLocalizer="@LH.Localize">
-                        <Field>
-                            <FieldLabel>型号</FieldLabel>
-                            <TextEdit @bind-Value="@NewCar.Type" Placeholder="请输入型号">
-                                <Feedback>
-                                    <ValidationError />
-                                </Feedback>
-                            </TextEdit>
-                        </Field>
-                    </Validation>
+                            <Validation MessageLocalizer="@LH.Localize">
+                                <Field>
+                                    <FieldLabel>型号</FieldLabel>
+                                    <TextEdit @bind-Value="@NewCar.Type" Placeholder="请输入型号">
+                                        <Feedback>
+                                            <ValidationError />
+                                        </Feedback>
+                                    </TextEdit>
+                                </Field>
+                            </Validation>
 
-                    <Validation MessageLocalizer="@LH.Localize" >
-                        <Field>
-                            <FieldLabel>描述</FieldLabel>
-                            <MemoEdit Rows="5" @bind-Text="@NewCar.Description" Placeholder="请输入描述信息">
-                                <Feedback>
-                                    <ValidationError />
-                                </Feedback>
-                            </MemoEdit>
-                        </Field>
-                    </Validation>
-
-                    <Validation MessageLocalizer="@LH.Localize">
-                        <Field>
-                            <FieldLabel>图片</FieldLabel>
-                            <FileEdit Multiple="true"
-                                      Placeholder="请至少上传一张图片"
-                                      Changed="@OnCarImagesChanged">
-                                <Feedback>
-                                    <ValidationError />
-                                </Feedback>
-                            </FileEdit>
-                        </Field>
-                    </Validation>
+                            <Validation MessageLocalizer="@LH.Localize">
+                                <Field>
+                                    <FieldLabel>描述</FieldLabel>
+                                    <MemoEdit Rows="5" @bind-Text="@NewCar.Description" Placeholder="请输入描述信息">
+                                        <Feedback>
+                                            <ValidationError />
+                                        </Feedback>
+                                    </MemoEdit>
+                                </Field>
+                            </Validation>
+                        </Column>
+                    </Row>
+                    <Row>
+                        <Validation MessageLocalizer="@LH.Localize">
+                            <Field>
+                                <FieldLabel>图片</FieldLabel>
+                                <FileEdit Multiple="true"
+                                          Placeholder="请至少上传一张图片"
+                                          Changed="@OnCarImagesChanged">
+                                    <Feedback>
+                                        <ValidationError />
+                                    </Feedback>
+                                </FileEdit>
+                            </Field>
+                        </Validation>
+                    </Row>
                 </Validations>
             </ModalBody>
             <ModalFooter>

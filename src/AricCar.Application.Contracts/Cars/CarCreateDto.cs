@@ -18,14 +18,16 @@ namespace AricCar.Cars
         public string DistrictCode { get; set; }
 
         [Required]
-        [StringLength(100, MinimumLength = 1, ErrorMessage = "请输入品牌，长度必须在1到100个字符之间")]
+        [MinLength(1, ErrorMessage = "品牌不能为空")]
+        [MaxLength(100, ErrorMessage = "品牌长度不能超过100个字符")]
         public string Brand { get; set; }
 
         [Required]
-        [StringLength(100, MinimumLength = 1, ErrorMessage = "请输入型号，长度必须在1到100个字符之间")]
+        [MinLength(1, ErrorMessage = "型号不能为空")]
+        [MaxLength(100, ErrorMessage = "型号长度不能超过100个字符")]
         public string Type { get; set; }
 
-        [StringLength(4000, ErrorMessage = "描述不能超过4000个字符")]
+        [MaxLength(4000, ErrorMessage = "描述不能超过4000个字符")]
         public string? Description { get; set; }
 
         // 修改为 IFileEntry 列表
