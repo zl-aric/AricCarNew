@@ -17,8 +17,8 @@ public class AricCarDbContextFactory : IDesignTimeDbContextFactory<AricCarDbCont
         AricCarEfCoreEntityExtensionMappings.Configure();
 
         var builder = new DbContextOptionsBuilder<AricCarDbContext>()
-            .UseSqlite(configuration.GetConnectionString("Default"));
-        
+              .UseMySql(configuration.GetConnectionString("Default"), MySqlServerVersion.LatestSupportedServerVersion);
+
         return new AricCarDbContext(builder.Options);
     }
 
