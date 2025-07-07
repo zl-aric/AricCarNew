@@ -96,15 +96,19 @@ namespace AricCar.Blazor.Client.Pages
             await CreateCarModal.Show();
         }
 
-        private string? imageError;
+        private string? imageError = "请至少上传一张图片";
 
-        private async Task OnCarImagesChanged(FileChangedEventArgs e)
+        private Task OnCarImagesChanged(FileChangedEventArgs e)
         {
             NewCar.ImageFiles = e.Files?.ToList() ?? new List<IFileEntry>();
             if (NewCar.ImageFiles.Count < 1)
                 imageError = "请至少上传一张图片";
+            else if (NewCar.ImageFiles.Count > 10)
+                imageError = "最多上传10张图片";
             else
                 imageError = null;
+
+            return Task.CompletedTask;
         }
 
         private async Task GetListAsync()

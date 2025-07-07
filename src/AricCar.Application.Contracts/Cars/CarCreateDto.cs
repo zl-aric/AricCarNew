@@ -31,9 +31,9 @@ namespace AricCar.Cars
         public string? Description { get; set; }
 
 
-        //// 只读属性用于数量验证
-        //[Range(1, int.MaxValue, ErrorMessage = "请至少上传一张图片")]
-        //public int ImageCount => ImageFiles?.Count ?? 0;
+        // 只读属性用于数量验证
+        [Range(1, 10, ErrorMessage = "请至少上传一张图片，最多上传10张图片")]
+        public int ImageCount => ImageFiles?.Count ?? 0;
 
         public List<IFileEntry> ImageFiles { get; set; } = [];
 

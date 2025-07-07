@@ -164,22 +164,17 @@
                         </Column>
                     </Row>
                     <Row>
-                        <Validation MessageLocalizer="@LH.Localize">
-                            <Field>
-                                <FieldLabel>图片</FieldLabel>
-                                <FileEdit Multiple="true"
-                                          Placeholder="请至少上传一张图片"
-                                          Changed="@OnCarImagesChanged">
-                                    <Feedback>
-                                        @if (!string.IsNullOrEmpty(imageError))
-                                        {
-                                            <div class="invalid-feedback d-block">@imageError</div>
-                                        }
-                                        <ValidationError />
-                                    </Feedback>
-                                </FileEdit>
-                            </Field>
-                        </Validation>
+                        <FieldLabel>图片</FieldLabel>
+                        <FileEdit Multiple="true"
+                                  Placeholder="请至少上传一张图片"
+                                  Changed="@OnCarImagesChanged">
+                            <Feedback>
+                                @if (!string.IsNullOrEmpty(imageError))
+                                {
+                                    <div class="invalid-feedback d-block">@imageError</div>
+                                }
+                            </Feedback>
+                        </FileEdit>
                     </Row>
                 </Validations>
             </ModalBody>
