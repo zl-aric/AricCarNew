@@ -14,8 +14,11 @@ namespace AricCar.Cars
         public int MinCount { get; set; } = 1;
         public long MaxFileSize { get; set; } = 10 * 1024 * 1024; // 10MB
 
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
+            if (value == null)
+                return new ValidationResult(ErrorMessage ?? $"请至少上传 {MinCount} 张图片");
+
             if (value is List<IFileEntry> files)
             {
                 if (files.Count < MinCount)

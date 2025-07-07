@@ -30,9 +30,12 @@ namespace AricCar.Cars
         [MaxLength(4000, ErrorMessage = "描述不能超过4000个字符")]
         public string? Description { get; set; }
 
-        // 修改为 IFileEntry 列表
-        [ValidateFile(MinCount = 1, ErrorMessage = "请至少上传一张图片")]
-        public List<IFileEntry> ImageFiles { get; set; } = new();
+
+        //// 只读属性用于数量验证
+        //[Range(1, int.MaxValue, ErrorMessage = "请至少上传一张图片")]
+        //public int ImageCount => ImageFiles?.Count ?? 0;
+
+        public List<IFileEntry> ImageFiles { get; set; } = [];
 
         public List<string> Images { get; set; } = [];
     }

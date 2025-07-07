@@ -171,6 +171,10 @@
                                           Placeholder="请至少上传一张图片"
                                           Changed="@OnCarImagesChanged">
                                     <Feedback>
+                                        @if (!string.IsNullOrEmpty(imageError))
+                                        {
+                                            <div class="invalid-feedback d-block">@imageError</div>
+                                        }
                                         <ValidationError />
                                     </Feedback>
                                 </FileEdit>

@@ -96,11 +96,15 @@ namespace AricCar.Blazor.Client.Pages
             await CreateCarModal.Show();
         }
 
+        private string? imageError;
+
         private async Task OnCarImagesChanged(FileChangedEventArgs e)
         {
-            NewCar.ImageFiles = e.Files.ToList();
-            // Removed the call to ValidateField as Validations does not contain this method
-            await NewCarValidations.ValidateAll();
+            NewCar.ImageFiles = e.Files?.ToList() ?? new List<IFileEntry>();
+            if (NewCar.ImageFiles.Count < 1)
+                imageError = "请至少上传一张图片";
+            else
+                imageError = null;
         }
 
         private async Task GetListAsync()
@@ -118,7 +122,7 @@ namespace AricCar.Blazor.Client.Pages
         {
             try
             {
-                if (await NewCarValidations.ValidateAll() == false)
+                if (!string.IsNullOrEmpty(imageError) || !await NewCarValidations.ValidateAll())
                 {
                     return;
                 }
